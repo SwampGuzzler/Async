@@ -41,12 +41,37 @@ doSomething("Get a user!", function() {
 
 // Parallel example
 
+
+/*
 var tweets = ["1", "2", "3", "4", "5"];
 for (var i = 0; i < tweets.length; i ++) {
-	var id = tweets[i];
-	(function (id) {
+	
+	(function () {
+		var id = tweets[i];
 		doSomething("tweet" + id, function() {
 			console.log("Tweet ", id, " is done");
 		});
-	})(id)
+	})()
 }
+*/
+
+
+
+// Parallel Example
+
+var tweets = ["1", "2", "3", "4", "5"];
+
+asyncMethods2 = [];
+
+for (var i = 0; i < tweets.length; i++)
+{
+    var id = tweets[i];
+
+    asyncMethods2.push((function (id) {
+        return function (callback) {    
+            doSomething(id, callback);
+        }
+    })(id));
+}
+
+async.parallel(asyncMethods2, function() { console.log("All done!"); });
